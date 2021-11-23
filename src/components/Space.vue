@@ -1,8 +1,8 @@
 <template>
   <q-responsive :ratio="1" class="space-wrapper col" @click="change">
-    <span v-for="(owner, piece_i) in pieces" :key="piece_i">
+    <span v-for="(owner, size) in pieces" :key="size">
       <span v-if="owner !== undefined">
-        <Piece :owner="owner"/>
+        <Piece :owner="owner" :size="size"/>
       </span>
     </span>
   </q-responsive>
