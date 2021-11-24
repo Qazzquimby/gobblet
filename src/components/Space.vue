@@ -2,21 +2,21 @@
   <q-responsive :ratio="1" class="space-wrapper col" @click="change">
     <span v-for="(owner, size) in pieces" :key="size">
       <span v-if="owner !== undefined">
-        <Piece :owner="owner" :size="size"/>
+        <Piece :owner="owner" :size="size" />
       </span>
     </span>
   </q-responsive>
 </template>
 
 <script setup>
-import {useStore} from 'vuex';
-import Piece from 'components/Piece';
+import { useStore } from "vuex";
+import Piece from "components/Piece";
 
-const $store = useStore();
+const store = useStore();
 
 const props = defineProps({
-  row: {type: Number, required: true},
-  col: {type: Number, required: true},
+  row: { type: Number, required: true },
+  col: { type: Number, required: true },
 });
 
 const pieces = $store.state.gameState.board[props.row][props.col];
