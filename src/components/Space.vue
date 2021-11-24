@@ -1,5 +1,5 @@
 <template>
-  <q-responsive :ratio="1" class="space-wrapper col" @click="change">
+  <q-responsive :ratio="1" class="space-wrapper col">
     <span v-for="(owner, size) in pieces" :key="size">
       <span v-if="owner !== undefined">
         <Piece :owner="owner" :size="size" />
@@ -19,11 +19,7 @@ const props = defineProps({
   col: { type: Number, required: true },
 });
 
-const pieces = $store.state.gameState.board[props.row][props.col];
-
-const change = () => {
-  console.log('MAKE CHANGE HERE PLEASE');
-};
+const pieces = store.state.gameState.board[props.row][props.col];
 </script>
 
 <style scoped lang="sass">
