@@ -4,13 +4,16 @@
 </template>
 
 <script setup>
+import {NUM_SIZES} from 'src/store/game-state/constants';
+
 name = 'Piece';
 
 const props = defineProps({
   owner: {type: Number, required: true},
   size: {type: Number, required: true},
 });
-  const size = (4-props.size)*100/4
+
+  const size = (NUM_SIZES-props.size)*100/NUM_SIZES
   const styleObject = {
     width: size+'%',
     height: size+'%',
