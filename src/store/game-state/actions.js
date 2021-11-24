@@ -17,6 +17,6 @@ export function movePiece(context, { start, dest, size }) {
   context.commit("setPiece", {
     loc: dest,
     size: size,
-    owner: startPieceOwner.owner,
+    owner: startPieceOwner,
   });
 }
