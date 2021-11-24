@@ -26,23 +26,31 @@ const { NUM_ROWS_COLS } = require("src/store/game-state/constants");
 
 let selectedSpace = undefined;
 
+const selectSpace = (clickedSpace) => {
+  //todo check if legal.
+  selectedSpace = clickedSpace;
+};
+
+const moveToSpace = (clickedSpace) => {
+  if (_.isEqual(selectedSpace, clickedSpace)) {
+    selectedSpace = undefined;
+  } else if (clickedSpace === undefined) {
+    store.dispatch("gameState/movePiece", {
+      start: selectedSpace,
+      dest: clickedSpace,
+      size: store.getters["gameState/getLargestPiece"](selectedSpace).size,
+    });
+  }
+};
+
 const clickSpace = (clickedSpace) => {
   console.log("old selected ", selectedSpace);
   console.log("clicked ", clickedSpace);
   if (selectedSpace === undefined) {
-    selectedSpace = clickedSpace;
+    selectSpace(clickedSpace);
   } else {
-    if (_.isEqual(selectedSpace, clickedSpace)) {
-      selectedSpace = undefined;
-    } else if (clickedSpace === undefined) {
-      store.dispatch("gameState/movePiece", {
-        start: selectedSpace,
-        dest: clickedSpace,
-        size: store.getters["gameState/getLargestPiece"](selectedSpace).size,
-      });
-    }
+    moveToSpace(clickedSpace);
   }
-
   console.log("selected", selectedSpace);
 };
 </script>
