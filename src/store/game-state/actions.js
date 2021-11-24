@@ -1,6 +1,6 @@
-export function movePiece(context, start, dest, size) {
-  const startPiece = context.getters.getPiece(start, size);
-  if (startPiece === undefined) {
+export function movePiece(context, { start, dest, size }) {
+  const startPieceOwner = context.getters.getPiece(start, size);
+  if (startPieceOwner === undefined) {
     throw `Trying to move piece that doesn't exist. start: ${start}, size: ${size}`;
   }
 
@@ -9,9 +9,14 @@ export function movePiece(context, start, dest, size) {
     throw `Trying to move piece to occupied location. dest: ${dest}, Size: ${size}`;
   }
 
-  context.commit('gameState/setPiece',
-    {loc: start, size: size, owner: undefined});
-  context.commit('gameState/setPiece',
-    {loc: dest, size: size, owner: startPiece.owner});
-
+  context.commit("setPiece", {
+    loc: start,
+    size: size,
+    owner: undefined,
+  });
+  context.commit("setPiece", {
+    loc: dest,
+    size: size,
+    owner: startPieceOwner.owner,
+  });
 }
