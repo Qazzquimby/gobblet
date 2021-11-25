@@ -18,16 +18,22 @@
 import Space from "components/Space";
 import _ from "lodash";
 import { useStore } from "vuex";
-import { getLargestPiece } from "src/store/game-state/getters";
+import { computed } from "vue";
 
 const store = useStore();
 
 const { NUM_ROWS_COLS } = require("src/store/game-state/constants");
 
-let currentPlayer = 0;
+let currentPlayer = 0; //todo add to vuex when used
+
+const getLargestPiece = (space) => {
+  return store.getters["gameState/getLargestPiece"](space);
+};
+
+const selectedSpace = computed(() => store.state.gameState.selectedSpace);
 
 const selectSpace = (clickedSpace) => {
-  const largestPiece = store.getters["gameState/getLargestPiece"](clickedSpace);
+  const largestPiece = getLargestPiece(clickedSpace);
   if (largestPiece !== undefined && largestPiece.owner === currentPlayer) {
     store.commit("gameState/setSelectedSpace", clickedSpace);
   }
@@ -38,11 +44,8 @@ const unselectSpace = () => {
 };
 
 const canMoveToSpace = (clickedSpace) => {
-  const selectedPiece = store.getters["gameState/getLargestPiece"](
-    store.state.gameState.selectedSpace
-  );
-  const largestPieceOnClickedSpace =
-    store.getters["gameState/getLargestPiece"](clickedSpace);
+  const selectedPiece = getLargestPiece(selectedSpace.value);
+  const largestPieceOnClickedSpace = getLargestPiece(clickedSpace);
 
   return (
     largestPieceOnClickedSpace === undefined ||
@@ -52,28 +55,26 @@ const canMoveToSpace = (clickedSpace) => {
 
 const moveToSpace = (clickedSpace) => {
   store.dispatch("gameState/movePiece", {
-    start: store.state.gameState.selectedSpace,
+    start: selectedSpace.value,
     dest: clickedSpace,
-    size: store.getters["gameState/getLargestPiece"](
-      store.state.gameState.selectedSpace
-    ).size,
+    size: getLargestPiece(selectedSpace.value).size,
   });
   unselectSpace();
 };
 
 const clickSpace = (clickedSpace) => {
-  console.log("old selected ", store.state.gameState.selectedSpace);
+  console.log("old selected ", selectedSpace.value);
   console.log("clicked ", clickedSpace);
 
-  if (store.state.gameState.selectedSpace === undefined) {
+  if (selectedSpace.value === undefined) {
     selectSpace(clickedSpace);
-  } else if (_.isEqual(store.state.gameState.selectedSpace, clickedSpace)) {
+  } else if (_.isEqual(selectedSpace.value, clickedSpace)) {
     unselectSpace();
   } else {
     if (canMoveToSpace(clickedSpace)) {
       moveToSpace(clickedSpace);
     }
   }
-  console.log("selected", store.state.gameState.selectedSpace);
+  console.log("selected", selectedSpace.value);
 };
 </script>
