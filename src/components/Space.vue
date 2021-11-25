@@ -1,8 +1,11 @@
 <template>
-  <q-responsive :ratio="1" class="space-wrapper col">
+  <q-responsive
+    :ratio="1"
+    class="space-wrapper col"
+    :style="{ background: isSelected ? 'grey' : '' }"
+  >
     <span v-for="(owner, size) in pieces" :key="size">
       <span v-if="owner !== undefined">
-        {{ isSelected }}
         <Piece :owner="owner" :size="size" />
       </span>
     </span>
