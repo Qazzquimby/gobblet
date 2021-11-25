@@ -9,6 +9,7 @@ board[1][1][1] = 1;
 
 export default function () {
   return {
+    selectedSpace: undefined,
     board: board,
     reserves: [],
   };
