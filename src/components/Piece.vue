@@ -1,24 +1,23 @@
 <template>
-    <div id="piece" :style="styleObject"/>
-
+  <div id="piece" :style="styleObject" />
 </template>
 
 <script setup>
-import {NUM_SIZES} from 'src/store/game-state/constants';
+import { NUM_SIZES } from "src/store/game-state/constants";
 
-name = 'Piece';
+name = "Piece";
 
 const props = defineProps({
-  owner: {type: Number, required: true},
-  size: {type: Number, required: true},
+  owner: { type: Number, required: true },
+  size: { type: Number, required: true },
 });
 
-  const size = (NUM_SIZES-props.size)*100/NUM_SIZES
-  const styleObject = {
-    width: size+'%',
-    height: size+'%',
-    borderColor: props.owner === 0 ? "blue" : "red"
-  }
+const size = (props.size * 100) / NUM_SIZES;
+const styleObject = {
+  width: size + "%",
+  height: size + "%",
+  borderColor: props.owner === 0 ? "blue" : "red",
+};
 </script>
 
 <style scoped lang="sass">
