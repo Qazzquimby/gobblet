@@ -37,6 +37,19 @@ const unselectSpace = () => {
   store.commit("gameState/setSelectedSpace", undefined);
 };
 
+const canMoveToSpace = (clickedSpace) => {
+  const selectedPiece = store.getters["gameState/getLargestPiece"](
+    store.state.gameState.selectedSpace
+  );
+  const largestPieceOnClickedSpace =
+    store.getters["gameState/getLargestPiece"](clickedSpace);
+
+  return (
+    largestPieceOnClickedSpace === undefined ||
+    selectedPiece.size > largestPieceOnClickedSpace.size
+  );
+};
+
 const moveToSpace = (clickedSpace) => {
   store.dispatch("gameState/movePiece", {
     start: store.state.gameState.selectedSpace,
@@ -51,12 +64,15 @@ const moveToSpace = (clickedSpace) => {
 const clickSpace = (clickedSpace) => {
   console.log("old selected ", store.state.gameState.selectedSpace);
   console.log("clicked ", clickedSpace);
+
   if (store.state.gameState.selectedSpace === undefined) {
     selectSpace(clickedSpace);
   } else if (_.isEqual(store.state.gameState.selectedSpace, clickedSpace)) {
     unselectSpace();
   } else {
-    moveToSpace(clickedSpace);
+    if (canMoveToSpace(clickedSpace)) {
+      moveToSpace(clickedSpace);
+    }
   }
   console.log("selected", store.state.gameState.selectedSpace);
 };
