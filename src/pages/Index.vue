@@ -39,7 +39,7 @@ const unselectSpace = () => {
 
 const moveToSpace = (clickedSpace) => {
   store.dispatch("gameState/movePiece", {
-    start: store.state.gameState.selectedPiece,
+    start: store.state.gameState.selectedSpace,
     dest: clickedSpace,
     size: store.getters["gameState/getLargestPiece"](
       store.state.gameState.selectedSpace
