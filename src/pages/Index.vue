@@ -24,36 +24,40 @@ const store = useStore();
 
 const { NUM_ROWS_COLS } = require("src/store/game-state/constants");
 
-let selectedSpace = undefined;
+let currentPlayer = 0;
 
 const selectSpace = (clickedSpace) => {
-  //todo check if legal.
-  selectedSpace = clickedSpace;
+  const largestPiece = store.getters["gameState/getLargestPiece"](clickedSpace);
+  if (largestPiece !== undefined && largestPiece.owner === currentPlayer) {
+    store.commit("gameState/setSelectedSpace", clickedSpace);
+  }
 };
 
 const unselectSpace = () => {
-  selectedSpace = undefined;
+  store.commit("gameState/setSelectedSpace", undefined);
 };
 
 const moveToSpace = (clickedSpace) => {
   store.dispatch("gameState/movePiece", {
-    start: selectedSpace,
+    start: store.state.gameState.selectedPiece,
     dest: clickedSpace,
-    size: store.getters["gameState/getLargestPiece"](selectedSpace).size,
+    size: store.getters["gameState/getLargestPiece"](
+      store.state.gameState.selectedSpace
+    ).size,
   });
   unselectSpace();
 };
 
 const clickSpace = (clickedSpace) => {
-  console.log("old selected ", selectedSpace);
+  console.log("old selected ", store.state.gameState.selectedSpace);
   console.log("clicked ", clickedSpace);
-  if (selectedSpace === undefined) {
+  if (store.state.gameState.selectedSpace === undefined) {
     selectSpace(clickedSpace);
-  } else if (_.isEqual(selectedSpace, clickedSpace)) {
+  } else if (_.isEqual(store.state.gameState.selectedSpace, clickedSpace)) {
     unselectSpace();
   } else {
     moveToSpace(clickedSpace);
   }
-  console.log("selected", selectedSpace);
+  console.log("selected", store.state.gameState.selectedSpace);
 };
 </script>
