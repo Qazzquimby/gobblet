@@ -24,13 +24,14 @@ const props = defineProps({
 });
 
 const isSelected = computed(() => {
+  //fixme
   return _.isEqual(store.state.gameState.selectedSpace, {
     row: props.row,
     col: props.col,
   });
 });
 
-const pieces = store.state.reserves[props.owner][props.id];
+const pieces = store.state.gameState.reserves[props.owner][props.id];
 </script>
 
 <style scoped lang="sass">
