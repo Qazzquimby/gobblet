@@ -1,16 +1,21 @@
 <template>
-  <q-page class="flex flex-center">
-    <div class="board" style="height: 100%; width: 100%">
-      <div v-for="row_i in NUM_ROWS_COLS" :key="row_i" class="row">
-        <Space
-          v-for="col_i in NUM_ROWS_COLS"
-          :key="col_i"
-          :row="row_i - 1"
-          :col="col_i - 1"
-          @click="clickSpace({ row: row_i - 1, col: col_i - 1 })"
-        />
+  <q-page>
+    <q-layout style="width: 90%; margin: 0 auto">
+      <h4 class="text-center">Current Player: {{ currentPlayer }}</h4>
+      <Reserve :player="0" />
+      <div class="board" style="height: 100%; width: 100%">
+        <div v-for="row_i in NUM_ROWS_COLS" :key="row_i" class="row">
+          <Space
+            v-for="col_i in NUM_ROWS_COLS"
+            :key="col_i"
+            :row="row_i - 1"
+            :col="col_i - 1"
+            @click="clickSpace({ row: row_i - 1, col: col_i - 1 })"
+          />
+        </div>
       </div>
-    </div>
+      <Reserve :player="1" />
+    </q-layout>
   </q-page>
 </template>
 
@@ -24,7 +29,7 @@ const store = useStore();
 
 const { NUM_ROWS_COLS } = require("src/store/game-state/constants");
 
-let currentPlayer = 0; //todo add to vuex when used
+const currentPlayer = computed(() => store.state.gameState.currentPlayer);
 
 const getLargestPiece = (space) => {
   return store.getters["gameState/getLargestPiece"](space);
@@ -34,7 +39,10 @@ const selectedSpace = computed(() => store.state.gameState.selectedSpace);
 
 const selectSpace = (clickedSpace) => {
   const largestPiece = getLargestPiece(clickedSpace);
-  if (largestPiece !== undefined && largestPiece.owner === currentPlayer) {
+  if (
+    largestPiece !== undefined &&
+    largestPiece.owner === currentPlayer.value
+  ) {
     store.commit("gameState/setSelectedSpace", clickedSpace);
   }
 };
@@ -60,6 +68,7 @@ const moveToSpace = (clickedSpace) => {
     size: getLargestPiece(selectedSpace.value).size,
   });
   unselectSpace();
+  store.commit("gameState/setCurrentPlayer", (currentPlayer.value + 1) % 2);
 };
 
 const clickSpace = (clickedSpace) => {
