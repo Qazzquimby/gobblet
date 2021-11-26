@@ -4,7 +4,7 @@
     class="space-wrapper col"
     :style="{ background: isSelected ? 'grey' : '' }"
   >
-    <span v-for="size in pieces" :key="size">
+    <span v-for="(_, size) in pieces.length" :key="size">
       <Piece :owner="owner" :size="size" />
     </span>
   </q-responsive>
@@ -32,6 +32,7 @@ const isSelected = computed(() => {
 });
 
 const pieces = store.state.gameState.reserves[props.owner][props.id];
+console.log("pieces", pieces);
 </script>
 
 <style scoped lang="sass">

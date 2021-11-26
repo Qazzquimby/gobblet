@@ -3,7 +3,7 @@
     <ReserveSpace
       v-for="col_i in NUM_RESERVE_STACKS"
       :key="col_i"
-      :id="col_i"
+      :id="col_i - 1"
       :owner="owner"
     />
   </div>
