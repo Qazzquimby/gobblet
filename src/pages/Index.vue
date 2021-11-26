@@ -5,12 +5,17 @@
       <Reserve :player="0" />
       <div class="board" style="height: 100%; width: 100%">
         <div v-for="row_i in NUM_ROWS_COLS" :key="row_i" class="row">
-          <Space
+          <BoardSpace
             v-for="col_i in NUM_ROWS_COLS"
             :key="col_i"
             :row="row_i - 1"
             :col="col_i - 1"
-            @click="clickSpace({ row: row_i - 1, col: col_i - 1 })"
+            @click="
+              clickSpace({
+                area: 'board',
+                coords: { row: row_i - 1, col: col_i - 1 },
+              })
+            "
           />
         </div>
       </div>
@@ -20,7 +25,7 @@
 </template>
 
 <script setup>
-import Space from "components/Space";
+import BoardSpace from "components/BoardSpace";
 import Reserve from "components/Reserve";
 import _ from "lodash";
 import { useStore } from "vuex";

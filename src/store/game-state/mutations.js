@@ -1,5 +1,9 @@
-export function setPiece(state, { loc, size, owner }) {
-  state.board[loc.row][loc.col][size] = owner;
+export function setPiece(state, { area, coords, size, owner }) {
+  if (area === "board") {
+    state.board[coords.row][coords.col][size] = owner;
+  } else if (area === "reserves") {
+    state.reserves[coords.row][coords.col][size] = owner;
+  }
 }
 
 export function setSelectedSpace(state, selectedSpace) {

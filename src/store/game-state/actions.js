@@ -10,12 +10,14 @@ export function movePiece(context, { start, dest, size }) {
   }
 
   context.commit("setPiece", {
-    loc: start,
+    area: start.area,
+    coords: start.coords,
     size: size,
     owner: undefined,
   });
   context.commit("setPiece", {
-    loc: dest,
+    area: "board",
+    coords: dest.coords,
     size: size,
     owner: startPieceOwner,
   });
