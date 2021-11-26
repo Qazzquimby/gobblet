@@ -2,7 +2,7 @@
   <q-page>
     <q-layout style="width: 90%; margin: 0 auto">
       <h4 class="text-center">Current Player: {{ currentPlayer }}</h4>
-      <Reserve :player="0" />
+      <Reserve :owner="0" />
       <div class="board" style="height: 100%; width: 100%">
         <div v-for="row_i in NUM_ROWS_COLS" :key="row_i" class="row">
           <BoardSpace
@@ -19,7 +19,7 @@
           />
         </div>
       </div>
-      <Reserve :player="1" />
+      <Reserve :owner="1" />
     </q-layout>
   </q-page>
 </template>
