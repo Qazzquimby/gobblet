@@ -21,6 +21,7 @@
 
 <script setup>
 import Space from "components/Space";
+import Reserve from "components/Reserve";
 import _ from "lodash";
 import { useStore } from "vuex";
 import { computed } from "vue";
