@@ -62,8 +62,9 @@ const canMoveToSpace = (clickedSpace) => {
   const largestPieceOnClickedSpace = getLargestPiece(clickedSpace);
 
   return (
-    largestPieceOnClickedSpace === undefined ||
-    selectedPiece.size > largestPieceOnClickedSpace.size
+    clickedSpace.area === "board" &&
+    (largestPieceOnClickedSpace === undefined ||
+      selectedPiece.size > largestPieceOnClickedSpace.size)
   );
 };
 

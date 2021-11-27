@@ -9,6 +9,10 @@ export function movePiece(context, { start, dest, size }) {
     throw `Trying to move piece to occupied location. dest: ${dest}, Size: ${size}`;
   }
 
+  if (dest.area === "reserves") {
+    throw `Trying to move piece into reserves.`;
+  }
+
   context.commit("setPiece", {
     area: start.area,
     coords: start.coords,
