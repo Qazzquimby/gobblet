@@ -2,7 +2,7 @@
   <q-responsive
     :ratio="1"
     class="space-wrapper col"
-    :style="{ background: isSelected ? 'grey' : '' }"
+    :style="{ background: background }"
   >
     <span v-for="(owner, size) in pieces" :key="size">
       <span v-if="owner !== undefined">
@@ -36,6 +36,27 @@ const isSelected = computed(() => {
     })
   );
 });
+
+const isLegalMove = computed(() => {
+  const legalMoves = store.getters["gameState/getLegalMoves"];
+  const match = legalMoves.find(
+    (legalMove) =>
+      legalMove.area === "board" &&
+      _.isEqual(legalMove.coords, { row: props.row, col: props.col })
+  );
+  return match !== undefined;
+});
+
+const background = computed(() => {
+  if (isSelected.value) {
+    return "grey";
+  } else if (isLegalMove.value) {
+    return "yellow";
+  } else {
+    return "";
+  }
+});
+
 const pieces = store.state.gameState.board[props.row][props.col];
 </script>
 
