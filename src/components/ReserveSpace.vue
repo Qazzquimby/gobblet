@@ -24,11 +24,15 @@ const props = defineProps({
 });
 
 const isSelected = computed(() => {
-  //fixme
-  return _.isEqual(store.state.gameState.selectedSpace, {
-    row: props.row,
-    col: props.col,
-  });
+  const selectedSpace = store.state.gameState.selectedSpace;
+  return (
+    selectedSpace !== undefined &&
+    selectedSpace.area === "reserves" &&
+    _.isEqual(selectedSpace.coords, {
+      row: props.owner,
+      col: props.id,
+    })
+  );
 });
 
 const pieces = store.state.gameState.reserves[props.owner][props.id];

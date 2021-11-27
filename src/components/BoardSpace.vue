@@ -26,10 +26,15 @@ const props = defineProps({
 });
 
 const isSelected = computed(() => {
-  return _.isEqual(store.state.gameState.selectedSpace, {
-    row: props.row,
-    col: props.col,
-  });
+  const selectedSpace = store.state.gameState.selectedSpace;
+  return (
+    selectedSpace !== undefined &&
+    selectedSpace.area === "board" &&
+    _.isEqual(selectedSpace.coords, {
+      row: props.row,
+      col: props.col,
+    })
+  );
 });
 const pieces = store.state.gameState.board[props.row][props.col];
 </script>
