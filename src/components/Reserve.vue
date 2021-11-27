@@ -5,6 +5,12 @@
       :key="col_i"
       :id="col_i - 1"
       :owner="owner"
+      @click="
+        $emit('click', {
+          area: 'reserves',
+          coords: { row: owner, col: col_i - 1 },
+        })
+      "
     />
   </div>
 </template>
@@ -15,6 +21,8 @@ import ReserveSpace from "components/ReserveSpace";
 const props = defineProps({
   owner: { type: Number, required: true },
 });
+
+const emit = defineEmits(["click"]);
 
 const { NUM_RESERVE_STACKS } = require("src/store/game-state/constants");
 </script>
