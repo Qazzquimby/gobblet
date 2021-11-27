@@ -4,8 +4,12 @@
     class="space-wrapper col"
     :style="{ background: isSelected ? 'grey' : '' }"
   >
-    <span v-for="(_, size) in pieces.length" :key="size">
-      <Piece :owner="owner" :size="size" />
+    <span v-for="(piece_owner, size) in pieces" :key="size">
+      <Piece
+        :owner="piece_owner"
+        :size="size"
+        v-if="piece_owner !== undefined"
+      />
     </span>
   </q-responsive>
 </template>
