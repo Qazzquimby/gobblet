@@ -40,7 +40,6 @@ const isSelected = computed(() => {
 });
 
 const pieces = store.state.gameState.reserves[props.owner][props.id];
-console.log("pieces", pieces);
 </script>
 
 <style scoped lang="sass">

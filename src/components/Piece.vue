@@ -13,7 +13,6 @@ const props = defineProps({
 });
 
 const size = (props.size * 100) / NUM_SIZES;
-console.log("size", props.size, size);
 const styleObject = {
   width: size + "%",
   height: size + "%",
