@@ -23,3 +23,7 @@ export const getLargestPiece = (state) => (loc) => {
   const largestSize = _.findLastIndex(space, (owner) => owner !== undefined);
   return { size: largestSize, owner: space[largestSize] };
 };
+
+export const getLegalMoves = (state) => {
+  return [{ area: "board", coords: { row: 2, col: 2 } }];
+};
