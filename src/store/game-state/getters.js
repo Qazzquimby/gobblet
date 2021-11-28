@@ -1,4 +1,5 @@
 import _ from "lodash";
+import { NUM_ROWS_COLS } from "src/store/game-state/constants";
 
 export const getPiece = (state) => (loc, size) => {
   if (loc.area === "board") {
@@ -24,6 +25,41 @@ export const getLargestPiece = (state) => (loc) => {
   return { size: largestSize, owner: space[largestSize] };
 };
 
-export const getLegalMoves = (state) => {
-  return [{ area: "board", coords: { row: 2, col: 2 } }];
-};
+export function getLegalMoves(state) {
+  const selectedSpace = state.selectedSpace;
+
+  if (selectedSpace === undefined) {
+    return [];
+  }
+
+  if (selectedSpace.area === "board") {
+    const coords = selectedSpace.coords;
+    const offsets = [-1, +1];
+    const directions = ["row", "col"];
+    let neighboringCoords = [];
+    for (const offset of offsets) {
+      for (const direction of directions) {
+        neighboringCoords.push({
+          ...coords,
+          [direction]: coords[direction] + offset,
+        });
+      }
+    }
+    neighboringCoords = neighboringCoords.filter((coords) => {
+      return (
+        coords.row >= 0 &&
+        coords.col >= 0 &&
+        coords.row < NUM_ROWS_COLS &&
+        coords.col < NUM_ROWS_COLS
+      );
+    });
+    const legalMoves = neighboringCoords.map((coords) => ({
+      area: "board",
+      coords,
+    }));
+    console.log(legalMoves);
+    return legalMoves;
+  }
+
+  return []; // Todo add legal moves from reserves
+}
