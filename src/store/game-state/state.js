@@ -9,7 +9,7 @@ const board = Array.from(Array(NUM_ROWS_COLS), (_) =>
   Array.from(Array(NUM_ROWS_COLS), (_) => Array(NUM_SIZES).fill(undefined))
 );
 // Temporary setup
-board[0][0][0] = 0;
+board[0][2][0] = 0;
 board[1][1][1] = 1;
 
 const reserves = Array.from(Array(NUM_PLAYERS), (_) =>
