@@ -1,53 +1,25 @@
 import { defineStore } from 'pinia';
 
 import _ from 'lodash';
-import assert from 'assert';
+import {
+  Area,
+  Board,
+  Coords,
+  IGameState,
+  isPlayer,
+  Loc,
+  NUM_COLS,
+  NUM_PLAYERS,
+  NUM_RESERVE_STACKS,
+  NUM_ROWS,
+  NUM_SIZES,
+  OptionalPlayer,
+  Player,
+  Reserves,
+  Size,
+} from 'components/models';
 
 const storeID = 'gameState';
-
-const players = [0, 1] as const;
-type Player = typeof players[number];
-const isPlayer = (x: any): x is Player => players.includes(x);
-
-export const NUM_ROWS = 4 as const;
-export const NUM_SIZES = 4 as const;
-export const NUM_PLAYERS = 2 as const;
-export const NUM_RESERVE_STACKS = 3 as const;
-const rowIndices = [...Array(NUM_ROWS).keys()] as const;
-type RowIndex = typeof rowIndices[number];
-const isRow = (x: any): x is RowIndex => rowIndices.includes(x);
-
-export const NUM_COLS = 4 as const;
-const colIndices = [...Array(NUM_COLS).keys()] as const;
-type ColIndex = typeof colIndices[number];
-const isCol = (x: any): x is ColIndex => colIndices.includes(x);
-
-const size = [...Array(NUM_SIZES).keys()] as const;
-type Size = typeof size[number];
-const isSize = (x: any): x is Size => size.includes(x);
-
-interface Coords {
-  row: RowIndex;
-  col: ColIndex;
-}
-type Area = 'board' | 'reserves';
-interface Loc {
-  area: Area;
-  coords: Coords;
-}
-type OptionalPlayer = Player | undefined;
-type Space = [OptionalPlayer, OptionalPlayer, OptionalPlayer, OptionalPlayer];
-type Row = [Space, Space, Space, Space];
-type Board = [Row, Row, Row, Row];
-
-type Reserve = [Space, Space, Space];
-type Reserves = [Reserve, Reserve];
-export interface IGameState {
-  currentPlayer: number;
-  selectedSpace: Loc | undefined;
-  board: Board;
-  reserves: Reserves;
-}
 
 const board: Board = Array.from(Array(NUM_ROWS), () => {
   return Array.from(Array(NUM_COLS), () => {
@@ -71,7 +43,7 @@ reserves.forEach((playerReserve, player) => {
   }
 });
 
-export const useUserStore = defineStore({
+export const useGameStateStore = defineStore({
   id: storeID,
 
   state: (): IGameState => {
@@ -84,28 +56,33 @@ export const useUserStore = defineStore({
   },
   getters: {
     getPiece: (state) => (loc: Loc, size: Size) => {
-      if (loc.area === 'board') {
-        return state.board[loc.coords.row][loc.coords.col][size];
-      } else {
-        console.assert(loc.area === 'reserves'); //Todo figure out which assert
-        return state.reserves[loc.coords.row][loc.coords.col][size];
+      switch (loc.area) {
+        case 'board':
+          return state.board[loc.coords.row][loc.coords.col][size];
+        case 'reserves':
+          return state.reserves[loc.coords.row][loc.coords.col][size];
       }
     },
     getLargestPiece: (state) => (loc: Loc) => {
-      assert(2 == 2);
-      let space = undefined;
-      if (loc.area === 'board') {
-        space = state.board[loc.coords.row][loc.coords.col];
-      } else {
-        assert(loc.area === 'reserves');
-        space = state.reserves[loc.coords.row][loc.coords.col];
+      let space;
+      switch (loc.area) {
+        case 'board':
+          space = state.board[loc.coords.row][loc.coords.col];
+          break;
+        case 'reserves':
+          space = state.reserves[loc.coords.row][loc.coords.col];
+          break;
       }
 
       const largestSize = _.findLastIndex(
         space,
         (owner: OptionalPlayer) => owner !== undefined
       );
-      return { size: largestSize, owner: space[largestSize] };
+      if (largestSize === -1) {
+        return undefined;
+      } else {
+        return { size: largestSize, owner: space[largestSize] };
+      }
     },
     getLegalMoves(state) {
       const selectedSpace = state.selectedSpace;
@@ -128,18 +105,14 @@ export const useUserStore = defineStore({
           }
         }
         neighboringCoords = neighboringCoords.filter((coords) => {
-          return (
-            coords.row >= 0 &&
-            coords.col >= 0 &&
-            coords.row < NUM_ROWS &&
-            coords.col < NUM_ROWS
-          );
+          const rowInBounds = coords.row >= 0 && coords.row < NUM_ROWS;
+          const colInBounds = coords.col >= 0 && coords.col < NUM_ROWS;
+          return rowInBounds && colInBounds;
         });
         const legalMoves = neighboringCoords.map((coords) => ({
           area: 'board',
           coords,
         }));
-        console.log(legalMoves);
         return legalMoves;
       }
 
@@ -147,7 +120,7 @@ export const useUserStore = defineStore({
     },
   },
   actions: {
-    movePiece(start: Loc, dest: Loc, size: Size) {
+    movePiece({ start, dest, size }: { start: Loc; dest: Loc; size: Size }) {
       const startPieceOwner = this.getPiece(start, size);
       if (startPieceOwner === undefined) {
         throw `Trying to move piece that doesn't exist. start: ${start}, size: ${size}`;
@@ -181,4 +154,4 @@ export const useUserStore = defineStore({
   },
 });
 
-export type UserStore = ReturnType<typeof useUserStore>;
+export type GameStateStore = ReturnType<typeof useGameStateStore>;
