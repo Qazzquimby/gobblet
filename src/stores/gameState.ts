@@ -84,7 +84,7 @@ export const useGameStateStore = defineStore({
         return { size: largestSize, owner: space[largestSize] };
       }
     },
-    getLegalMoves(state) {
+    legalMoves(state) {
       const selectedSpace = state.selectedSpace;
 
       if (selectedSpace === undefined) {
